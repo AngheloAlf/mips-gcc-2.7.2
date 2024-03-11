@@ -39,9 +39,9 @@ jobs:
           ./configure --target=mips-mips-gnu --prefix=/opt/cross --with-gnu-as --disable-gprof --disable-gdb --disable-werror --host=${{ matrix.TARGET.HOST }} --build=${{ matrix.TARGET.HOST }}
 
       - name: Make
-        shell: bash # The generated `c-parse.c` is already commited on the repo, so we touch it to avoid regenerating it (trying to build old lex/yacc files with modern tools fails)
+        shell: bash # The generated `c-parse.c` and `cp/parse.c` are already commited on the repo, so we touch it to avoid regenerating it, because trying to build old lex/yacc files with modern tools fails
         run: |
-          touch c-parse.c
+          touch c-parse.c cp/parse.c
           make CFLAGS="${{ matrix.TARGET.CFLAGS }}" xgcc cc1 cc1plus cpp cccp g++
 
       - name: Test for file
