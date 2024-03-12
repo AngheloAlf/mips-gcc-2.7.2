@@ -4035,16 +4035,24 @@ expand_expr (exp, target, tmode, modifier)
   /* Chain of pending expressions for PLACEHOLDER_EXPR to replace.
      This is static so it will be accessible to our recursive callees.  */
   static tree placeholder_list = 0;
+
+
   register rtx op0, op1, temp;
+  fprintf(stderr, "tree type = TREE_TYPE (exp);\n");
   tree type = TREE_TYPE (exp);
+  fprintf(stderr, "int unsignedp = TREE_UNSIGNED (type);\n");
   int unsignedp = TREE_UNSIGNED (type);
+  fprintf(stderr, "register enum machine_mode mode = TYPE_MODE (type);\n");
   register enum machine_mode mode = TYPE_MODE (type);
+  fprintf(stderr, "register enum tree_code code = TREE_CODE (exp);\n");
   register enum tree_code code = TREE_CODE (exp);
   optab this_optab;
   /* Use subtarget as the target for operand 0 of a binary operation.  */
+  fprintf(stderr, "rtx subtarget = (target != 0 && GET_CODE (target) == REG ? target : 0);\n");
   rtx subtarget = (target != 0 && GET_CODE (target) == REG ? target : 0);
   rtx original_target = target;
   /* Maybe defer this until sure not doing bytecode?  */
+  fprintf(stderr, "int ignore = (target == const0_rtx\n");
   int ignore = (target == const0_rtx
 		|| ((code == NON_LVALUE_EXPR || code == NOP_EXPR
 		     || code == CONVERT_EXPR || code == REFERENCE_EXPR
