@@ -40,6 +40,7 @@ Boston, MA 02111-1307, USA.  */
 #include "bc-typecd.h"
 #include "bc-optab.h"
 #include "bc-emit.h"
+#include <stdio.h>
 
 
 #define CEIL(x,y) (((x) + (y) - 1) / (y))
@@ -4029,6 +4030,8 @@ expand_expr (exp, target, tmode, modifier)
      enum machine_mode tmode;
      enum expand_modifier modifier;
 {
+  fprintf(stderr, "\n    expand_expr!\n\n");
+
   /* Chain of pending expressions for PLACEHOLDER_EXPR to replace.
      This is static so it will be accessible to our recursive callees.  */
   static tree placeholder_list = 0;
@@ -4049,6 +4052,8 @@ expand_expr (exp, target, tmode, modifier)
 		    && TREE_CODE (type) == VOID_TYPE));
   tree context;
 
+  fprintf(stderr, "1\n");
+
 
   if (output_bytecode && modifier != EXPAND_INITIALIZER)
     {
@@ -4056,20 +4061,29 @@ expand_expr (exp, target, tmode, modifier)
       return NULL;
     }
 
+  fprintf(stderr, "2\n");
+
   /* Don't use hard regs as subtargets, because the combiner
      can only handle pseudo regs.  */
   if (subtarget && REGNO (subtarget) < FIRST_PSEUDO_REGISTER)
     subtarget = 0;
+
+  fprintf(stderr, "3\n");
+
   /* Avoid subtargets inside loops,
      since they hide some invariant expressions.  */
   if (preserve_subexpressions_p ())
     subtarget = 0;
+
+  fprintf(stderr, "4\n");
 
   /* If we are going to ignore this result, we need only do something
      if there is a side-effect somewhere in the expression.  If there
      is, short-circuit the most common cases here.  Note that we must
      not call expand_expr with anything but const0_rtx in case this
      is an initial expansion of a size that contains a PLACEHOLDER_EXPR.  */
+
+  fprintf(stderr, "5\n");
 
   if (ignore)
     {
@@ -4107,6 +4121,8 @@ expand_expr (exp, target, tmode, modifier)
       target = 0;
     }
 
+  fprintf(stderr, "6\n");
+
   /* If will do cse, generate all results into pseudo registers
      since 1) that allows cse to find more things
      and 2) otherwise cse could produce an insn the machine
@@ -4115,6 +4131,8 @@ expand_expr (exp, target, tmode, modifier)
   if (! cse_not_expected && mode != BLKmode && target
       && (GET_CODE (target) != REG || REGNO (target) < FIRST_PSEUDO_REGISTER))
     target = subtarget;
+
+  fprintf(stderr, "7\n");
 
   switch (code)
     {
@@ -6448,17 +6466,24 @@ expand_expr (exp, target, tmode, modifier)
       return (*lang_expand_expr) (exp, original_target, tmode, modifier);
     }
 
+  fprintf(stderr, "8\n");
+
   /* Here to do an ordinary binary operator, generating an instruction
      from the optab already placed in `this_optab'.  */
  binop:
   preexpand_calls (exp);
   if (! safe_from_p (subtarget, TREE_OPERAND (exp, 1)))
     subtarget = 0;
+  fprintf(stderr, "9\n");
+
   op0 = expand_expr (TREE_OPERAND (exp, 0), subtarget, VOIDmode, 0);
   op1 = expand_expr (TREE_OPERAND (exp, 1), NULL_RTX, VOIDmode, 0);
  binop2:
   temp = expand_binop (mode, this_optab, op0, op1, target,
 		       unsignedp, OPTAB_LIB_WIDEN);
+
+  fprintf(stderr, "10\n");
+
   if (temp == 0)
     abort ();
   return temp;
