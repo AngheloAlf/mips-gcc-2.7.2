@@ -30,7 +30,8 @@ jobs:
 
     name: Building gcc for ${{ matrix.TARGET.OS }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@main
 
       - name: Install dependencies (Ubuntu)
         shell: bash
@@ -64,7 +65,7 @@ jobs:
           tar -czf ${{ matrix.TARGET.ARCHIVE_NAME }} gcc cc1 cc1plus cpp cccp g++
 
       - name: Upload archive
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@main
         with:
           name: gcc-2.7.2-${{ matrix.TARGET.OS }}
           path: |
